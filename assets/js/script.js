@@ -60,12 +60,27 @@ searchInput.addEventListener("input", async () => {
 
 // Listener de evento para el botón "compra"
 const contenedor = document.getElementById("contenedorJuego");
-contenedor.addEventListener("click", (event) => {
+contenedor.addEventListener("click", async (event) => {
   if (event.target.classList.contains("btn-primary")) {
     const button = event.target;
     const juegoCard = button.closest(".card");
     const juegoName = juegoCard.querySelector(".card-title").textContent;
-    // Redirecciona al detalle del juego seleccionado
-    window.location.href = `juego-unico.html?name=${encodeURIComponent(juegoName)}`;
+    
+    // Obtener los detalles del juego por su nombre
+    try {
+      const response = await fetch(`https://my.api.mockaroo.com/users.json?key=9bc25200&name=${encodeURIComponent(juegoName)}`);
+      if (!response.ok) {
+        throw new Error('La solicitud falló');
+      }
+      const juego = await response.json();
+
+      // Almacenar el juego actual en localStorage
+      localStorage.setItem('juegoActual', JSON.stringify(juego)); 
+
+      // Redireccionar al detalle del juego seleccionado
+      window.location.href = `juego-unico.html?name=${encodeURIComponent(juegoName)}`;
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
 });
