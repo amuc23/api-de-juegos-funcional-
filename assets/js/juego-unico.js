@@ -7,7 +7,7 @@ console.log('Nombre del juego:', juegoName); // Verificar el nombre del juego
 // Función para obtener los detalles del juego por su nombre
 const obtenerDetallesJuego = async (nombre) => {
   try {
-    const response = await fetch('https://my.api.mockaroo.com/users.json?key=9bc25200');
+    const response = await fetch('https://my.api.mockaroo.com/juegos?key=9bc25200');
     if (!response.ok) {
       throw new Error('La solicitud falló');
     }
@@ -30,12 +30,13 @@ const renderizarDetalleJuego = (juego) => {
 
   const juegoHTML = `
   <div class="card">
-      <img src="${juego.img}" class="card-img-top" alt="${juego.name}">
+      <img src="${juego.img}" class="card-img-top" alt="">
       <div class="card-body">
           <h5 class="card-title">${juego.name}</h5>
           <p class="card-text">Descripción: ${juego.descrip}</p>
           <p class="card-text">Consolas: ${juego.consolas}</p>
           <p class="card-text">Precio: ${juego.precio}</p>
+          <p class="card-text"> ${juego.stock}</p>
           <!-- Aquí puedes agregar más detalles si es necesario -->
           <a href="javascript:history.back()" class="btn btn-primary">Volver</a>
       </div>

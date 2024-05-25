@@ -1,11 +1,12 @@
 // Función mejorada para generar el HTML de una tarjeta de juegos
-const generateJuegoCard = ({ img, name, precio }) => {
+const generateJuegoCard = ({ img, name, precio, stock }) => {
   return `
       <div class="card col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12 mb-5">
           <img src="${img}" class="card-img-top" alt="${precio}">
           <div class="card-body">
               <h5 class="card-title">${name}</h5>
               <h5 class="card-title">${precio}</h5>
+              <h5 class="card-title">${stock}</h5>
               <button class="btn btn-primary"><i class="fa-solid fa-cart-shopping"></i>&nbsp;Comprar</button>
           </div>
       </div>
@@ -15,7 +16,7 @@ const generateJuegoCard = ({ img, name, precio }) => {
 // Función para obtener los juegos desde la API y renderizar las tarjetas
 const obtenerYRenderizarJuegos = async () => {
   try {
-    const response = await fetch('https://my.api.mockaroo.com/users.json?key=9bc25200');
+    const response = await fetch('https://my.api.mockaroo.com/juegos?key=9bc25200 ');
     if (!response.ok) {
       throw new Error('La solicitud falló');
     }
@@ -26,13 +27,16 @@ const obtenerYRenderizarJuegos = async () => {
   }
 };
 
-// Función para renderizar las tarjetas de juegos
+// Función para renderizar las tarjetas de juegos y almacenarlas en localStorage
 const renderJuegos = (juegos) => {
   const contenedor = document.getElementById("contenedorJuego");
   contenedor.innerHTML = ""; // Limpiar el contenedor antes de renderizar las tarjetas
   juegos.forEach((juego) => {
-      const cardHTML = generateJuegoCard(juego); // Genera el HTML de la tarjeta para cada juego
-      contenedor.innerHTML += cardHTML; // Agrega la tarjeta al contenedor
+    const cardHTML = generateJuegoCard(juego); // Genera el HTML de la tarjeta para cada juego
+    contenedor.innerHTML += cardHTML; // Agrega la tarjeta al contenedor
+    
+    // Almacenar el juego en localStorage
+    localStorage.setItem(juego.name, JSON.stringify(juego));
   });
 };
 
@@ -44,7 +48,7 @@ const searchInput = document.getElementById("nombre");
 searchInput.addEventListener("input", async () => {
   const searchTerm = searchInput.value.trim().toLowerCase();
   try {
-    const response = await fetch('https://my.api.mockaroo.com/users.json?key=9bc25200');
+    const response = await fetch('https://my.api.mockaroo.com/juegos?key=9bc25200');
     if (!response.ok) {
       throw new Error('La solicitud falló');
     }
@@ -66,21 +70,17 @@ contenedor.addEventListener("click", async (event) => {
     const juegoCard = button.closest(".card");
     const juegoName = juegoCard.querySelector(".card-title").textContent;
     
-    // Obtener los detalles del juego por su nombre
-    try {
-      const response = await fetch(`https://my.api.mockaroo.com/users.json?key=9bc25200&name=${encodeURIComponent(juegoName)}`);
-      if (!response.ok) {
-        throw new Error('La solicitud falló');
-      }
-      const juego = await response.json();
-
-      // Almacenar el juego actual en localStorage
-      localStorage.setItem('juegoActual', JSON.stringify(juego)); 
-
-      // Redireccionar al detalle del juego seleccionado
-      window.location.href = `juego-unico.html?name=${encodeURIComponent(juegoName)}`;
-    } catch (error) {
-      console.error('Error:', error);
+    // Obtener los detalles del juego desde localStorage
+    const juego = JSON.parse(localStorage.getItem(juegoName));
+    if (!juego) {
+      console.error('El juego no está en el almacenamiento local');
+      return;
     }
+
+    // Almacenar el juego actual en localStorage
+    localStorage.setItem('juegoActual', JSON.stringify(juego)); 
+
+    // Redireccionar al detalle del juego seleccionado
+    window.location.href = `juego-unico.html?name=${encodeURIComponent(juegoName)}`;
   }
 });
