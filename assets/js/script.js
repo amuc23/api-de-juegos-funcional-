@@ -2,7 +2,7 @@
 const generateJuegoCard = ({ img, name, precio, stock }) => {
   return `
       <div class="card col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12 mb-5">
-          <img src="${img}" class="card-img-top" alt="${precio}">
+          <img src="${img}" class="card-img-top" alt="">
           <div class="card-body">
               <h5 class="card-title">${name}</h5>
               <h5 class="card-title">${precio}</h5>
@@ -16,7 +16,7 @@ const generateJuegoCard = ({ img, name, precio, stock }) => {
 // Función para obtener los juegos desde la API y renderizar las tarjetas
 const obtenerYRenderizarJuegos = async () => {
   try {
-    const response = await fetch('https://my.api.mockaroo.com/juegos?key=9bc25200 ');
+    const response = await fetch('https://run.mocky.io/v3/d1f85e57-309c-4feb-afde-e6c146f476e5');
     if (!response.ok) {
       throw new Error('La solicitud falló');
     }
@@ -49,7 +49,7 @@ const searchInput = document.getElementById("nombre");
 searchInput.addEventListener("input", async () => {
   const searchTerm = searchInput.value.trim().toLowerCase();
   try {
-    const response = await fetch('https://my.api.mockaroo.com/juegos?key=9bc25200');
+    const response = await fetch('https://run.mocky.io/v3/d1f85e57-309c-4feb-afde-e6c146f476e5');
     if (!response.ok) {
       throw new Error('La solicitud falló');
     }
