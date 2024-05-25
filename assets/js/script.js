@@ -21,6 +21,7 @@ const obtenerYRenderizarJuegos = async () => {
       throw new Error('La solicitud falló');
     }
     const juegos = await response.json();
+    console.log('Data de la API:', juegos); // Mostrar los datos de la API en la consola
     renderJuegos(juegos); // Llama a la función renderJuegos para mostrar las tarjetas
   } catch (error) {
     console.error('Error:', error);
@@ -84,3 +85,4 @@ contenedor.addEventListener("click", async (event) => {
     window.location.href = `juego-unico.html?name=${encodeURIComponent(juegoName)}`;
   }
 });
+
